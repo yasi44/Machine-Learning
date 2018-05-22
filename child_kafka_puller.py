@@ -88,7 +88,7 @@ def main():
     #for test
     sched.add_cron_job(schedul_kill, month='1-12', day_of_week=str(today), hour='0-23', minute=curr_min+2, second=4)
     
-    print('listening to kafka ...')
+    print('pulling from kafka ...')
     while True:      
       sys.stdout.flush()     
       json_stock_prediction =stock_pred.run(message, 0.5)
