@@ -62,7 +62,7 @@ def schedul_func():
     #subprocess.call('python /home/yasi/Documents/python\ codes/tempsTest.py', shell=True) 
 
     #this one works but opens a subprocess dependent to main process. we want a new independent process    
-    proc=subprocess.Popen(["gnome-terminal", "--command=python /home/yasi/Documents/python\ codes/tempsTest.py"])
+    proc=subprocess.Popen(["gnome-terminal", "--command=python /home/yasi/Documents/python\ codes/child_kafka_puller.py"])
 def main():
     
     new_process_flag=False
