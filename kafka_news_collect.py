@@ -39,15 +39,15 @@ def main():
         for msg in consumer:
             try:
                 if 'content' and 'published_date' in msg:
-                    date=msg['published_date']
+                    news_time=msg['published_date']
                     content=msg['content']
                     if(re.search(u'[\u4e00-\u9fff]', content)):#ignore it if its chinese
                         pass
                     else:
-                        file_name="kafka_grabbed_news/"+current_time+".txt"
+                        file_name="kafka_grabbed_news/"+news_time+".txt"
                         news_file=open(file_name,"w")
                         news_file.write(msg)
-                        print("news"+current_time+" has been written ")
+                        print("news"+news_time+" has been written ")
                         news_file.close()
             except KeyError,e:
                 print("ERR! no key for",e, "in id=", msg.key, "for json=",msg.value)
