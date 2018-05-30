@@ -38,15 +38,17 @@ def main():
         tz = pytz.timezone('Asia/Kuala_Lumpur')#py 2.7
         for msg in consumer:
             try:
-                now_utc = dt.datetime.now(tz=tz)# py 2.7
-                now = now_utc.astimezone(gettz('Asia/Kuala_Lumpur'))
-                current_time=now_utc.isoformat()
-                file_name="kafka_grabbed_news/"+current_time+".txt"
-                news_file=open(file_name,"w")
-                news_file.write(msg)
-                news_file.write("\n")
-                print("news"+current_time+" has been written ")
-                news_file.close()
+                if 'content' and 'published_date' in msg:
+                    date=msg['published_date']
+                    content=msg['content']
+                    if(re.search(u'[\u4e00-\u9fff]', content)):#ignore it if its chinese
+                        pass
+                    else:
+                        file_name="kafka_grabbed_news/"+current_time+".txt"
+                        news_file=open(file_name,"w")
+                        news_file.write(msg)
+                        print("news"+current_time+" has been written ")
+                        news_file.close()
             except KeyError,e:
                 print("ERR! no key for",e, "in id=", msg.key, "for json=",msg.value)
             except Exception, e:
