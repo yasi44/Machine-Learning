@@ -18,11 +18,16 @@ def is_english(s):
     else:
        return True
 
+def setup():
+    global global_pre_time
+    dt = datetime(2018, 1, 1, 23, 23,59)
+    global_pre_time= int(dt.strftime("%s"))*1000 #to be in millisecond instead of second(javascript version of unix time)
 
 def sche_get_from_elastic():
-    curr_time=int(time.time())
-    es = Elasticsearch()
-    elasticsearch = '' ##### put the server ip
+    dt=datetime.now() 
+    now = datetime(dt.year, dt.month, dt.day, dt.hour,dt.minute,dt.second)
+    curr_time= int(now.strftime("%s"))*1000#to be in millisecond instead of second(javascript version of unix time)
+    elasticsearch = '10.1.84.104:9200' ##### put the server ip
     es = Elasticsearch([elasticsearch])
     index = 'article'
     query = {
@@ -66,16 +71,30 @@ def sche_get_from_elastic():
         print("news.json has been created")
     
 def main():
-    curr_time=int(time.time())
-    today= datetime.now().weekday()
+    setup()
     curr_min=datetime.now().minute
-    curr_hour=datetime.now().hour
+   # curr_time=int(time.time())
+  #  today= datetime.now().weekday()
+ #   curr_hour=datetime.now().hour
     sched = Scheduler()
     sched.start()        # start the scheduler
     
     #sched.add_cron_job(schedul_func, month='1-12', day_of_week=str((today+6)%7), hour=3, minute=15)
     #for test
     sched.add_cron_job(sche_get_from_elastic, month='1-12', day_of_week='0-6', hour='0-23', minute=curr_min+1, second=4)
+    
+    #    
+#    #1. scheduler to collect latest news from elasticsearch and store them(Saturdays -2 A.M.)
+#    sched.add_cron_job(sche_get_from_elastic, month='1-12', day_of_week='5', hour='2', minute=1, second=1)
+#    
+#    #2. scheduler to clean the news and create training data:news, stockChanges(is automatically collected by separate running process)(Saturdays -2:30 A.M.) 
+#    sched.add_cron_job(sche_clean_news_create_train_data, month='1-12', day_of_week='5', hour='2', minute=30, second=1)
+#    
+#    #3. scheduler to train a new model and store in dated folder(Saturdays -3 A.M.)
+#    sched.add_cron_job(sche_train_new_model, month='1-12', day_of_week='5', hour='3', minute=1, second=1)
+#    
+#    #4. scheduler to delete the pre model and load new process having the latest model(Saturdays -5 A.M.)
+#    sched.add_cron_job(sche_delPre_runLatest, month='1-12', day_of_week='5', hour='5', minute=1, second=1)
     
     while True:
         sys.stdout.flush()     
