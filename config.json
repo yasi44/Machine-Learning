@@ -1,0 +1,45 @@
+{
+  "DEFAULT": {
+    "MODELS_PATH": "/savedMagpieModels",
+    "GOOGLE_WORD2VEC_PATH": "/googlenews_vectors_negative300/GoogleNews-vectors-negative300.bin",
+    "STOCK_PRICES_PATH": "/StockPriceScrappedFromBursaMalaysia",
+    "NEWS_PATH": "/elastic_grabbed_news",
+    "STOCKS_LABELS_PATH":"/data_files/800sectors_symbols.txt",
+    "STOCKS_INFO_PATH":"/data_files/800sectors.txt",
+    "SCALAR_PATH":"/for_fit_scalar_only",
+    "TEMP_DATA_PATH": "/data_files/temp_data",
+    "DATA_PATH":"/data_files",
+    "NEWS_START_DATETIME": "2018-7-28-23-23-59",
+    "SCHEDULER_KAFKA_LISTENER_KILLER": {	
+		"MONTH": "1-12",
+		"DAY": "2",
+		"HOUR": "0-23",
+		"MINUTE": "*/5",
+		"SECOND": "3"
+		},
+	"SCHEDULER_KAFKA_LISTENER": {	
+		"MONTH": "1-12",  
+		"DAY": "2",
+		"HOUR": "0-23",
+		"MINUTE": "*/7",
+		"SECOND": "15"
+		},
+	"SCHEDULER_AUTO_TRAINER": {
+		"MONTH": "1-12",
+		"DAY": "2",
+		"HOUR": "0-23",
+		"MINUTE": "*/11",
+		"SECOND": "10"
+		},
+    "POSITIVE_STOCKS_SELECTION_STRATEGY": "average",
+    "STOCK_CHANGE_PERCENTAGE_THRESHOLD": 1.0,
+    "GRAPIE_TEST_RATIO": 0.1,
+    "MIN_BACKUP_MODEL": 3,
+    "NEWS_STOCKPRICE_GAP": 15,
+    "GRAPIE_EPOCHS": 1
+    },
+  "TEST": {
+    "TEST_TMP_DIR": "tests",
+    "TEST_TIMEOUT": 20
+  }
+}
