@@ -52,50 +52,45 @@ import subprocess
 import warnings
 warnings.filterwarnings("ignore")
 
-new_process_flag=False
-pid=0
-
+# the created child process will kill itself
 def schedul_kill():
-    pid=os.getpid()
-    os.kill(pid, signal.SIGTERM) # it kill both parent and child process
+    try:
+        pid=os.getpid()
+        os.kill(pid, signal.SIGTERM) # it kill both parent and child process
+    except Exception:
+        PrintException()
     
-def main():
+    #subprocess.call('python /home/yasi/Documents/python_codes/tempsTest.py', shell=True) 
+    #this one works but opens a subprocess dependent to main process. we want a new independent process    
+    #pid=subprocess.Popen(args=["gnome-terminal", "--command=python /home/yasi/Documents/python_codes/tempsTest.py"]).pid
     
-    new_process_flag=False
-    File=open("stockLabels2.labels","r")
-    List=[""]
-    for Line in File:
-        List.append(string.replace(Line,'\n',''))
-        
 
-    result =False
-    path=os.path.join('','savedMagpieModels')
-    
-    today= datetime.now().weekday()
-    curr_min=datetime.now().minute
-    curr_hour=datetime.now().hour    
-    stock_pred = StockPrediction()
-    labels=List
-    print('model loaded')
-   
+def main():
+
+    #for test purpose only
+    time_now=datetime.now()
+    today= time_now.weekday()
+    curr_min=time_now.minute
     my_file=open('data2/noline3/2018-03-23-09-18-00.txt','r')
     message=my_file.read()
-    
+    stock_pred = StockPrediction()
+    print("loading config file...")
+    config_obj=ConfigManager()
+    print("config_obj loaded")
     sched = Scheduler()
-    sched.start()        # start the scheduler
-    
-    #sched.add_cron_job(schedul_func, month='1-12', day_of_week=str((today+6)%7), hour=3, minute=15)
-    #for test
-    sched.add_cron_job(schedul_kill, month='1-12', day_of_week=str(today), hour='0-23', minute=curr_min+2, second=4)
-    
+    sched.start() 
+#    sched.add_cron_job(schedul_kill, month='1-12', day_of_week=str(today), hour='0-23', minute=curr_min+4, second=time_now.second+4)
+    sched.add_cron_job(schedul_kill, year=2018,month=config_obj.get_sch_listener_killer_month()
+                       ,day_of_week=config_obj.get_sch_listener_killer_day()
+                       ,hour=config_obj.get_sch_listener_killer_hour()
+                       ,minute=config_obj.get_sch_listener_killer_minute()
+                       ,second=config_obj.get_sch_listener_killer_second())
+   
     print('pulling from kafka ...')
-    while True:      
-      sys.stdout.flush()     
-      json_stock_prediction =stock_pred.run(message, 0.5)
-      #with open('json_stock_prediction.json','w') as outfile:
-      #    json.dump(json_stock_prediction,outfile, indent=4, sort_keys=True)
-      time.sleep(5)
-        
+    while True: 
+        sys.stdout.flush()     
+        json_stock_prediction =stock_pred.run(message, 0.5)# TODO: decide what todo with output
+        time.sleep(5)
         
 if __name__ == "__main__":
    main()
